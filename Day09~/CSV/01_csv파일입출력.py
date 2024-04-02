@@ -36,4 +36,4 @@ with open(input_file, 'r', newline='',encoding = 'utf-8') as filereader:
 
 # 실행하기
 # 통합터미널 실행 후 아래 코드 복사 붙여넣기
-# python .\01_csv파일입출력.py "C:\Huey\GIT\Python01-1\Day09\CSV\input\sample.csv" "C:\Huey\GIT\Python01-1\Day09\CSV\output\sample.csv"          
+# python .\01_csv파일입출력.py "C:\Huey\GIT\Python01-1\Day09~\CSV\input\sample.csv" "C:\Huey\GIT\Python01-1\Day09~\CSV\output\sample.csv"          

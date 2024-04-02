@@ -1,10 +1,11 @@
 
-
+# pandas 모듈 설치
+# pip install pandas
 
 # import sys
 import pandas as pd
 
-path = 'C:/Huey/GIT/Python01-1/Day09/CSV/'
+path = 'C:/Huey/GIT/Python01-1/Day09~/CSV/'
 input_file = path + 'input/' + input('입력 파일 : ')
 output_file = path + 'output/' + input('출력 파일 : ')
 
