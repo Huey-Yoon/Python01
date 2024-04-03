@@ -16,7 +16,7 @@ output_file = path + 'output/' + input('출력 파일 : ')
 
 data_frame = pd.read_csv(input_file)
 
-condition = r'^\d{2,3}-\d{3,4}-\d{4}$'
+condition = re.compile(r'^\d{2,3}-\d{3,4}-\d{4}$')
 data_frame_match_pattern = data_frame.loc[data_frame['전화번호'].str.match(condition)]
 
 data_frame_match_pattern.to_csv(output_file, index = False)
