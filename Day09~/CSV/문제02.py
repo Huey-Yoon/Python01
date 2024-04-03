@@ -6,3 +6,17 @@
     데이터만 추출하시오.
 
 '''
+
+import pandas as pd
+import re
+
+path = 'C:/Huey/GIT/Python01-1/Day09~/CSV/'
+input_file = path + 'input/' + input('입력 파일 : ')
+output_file = path + 'output/' + input('출력 파일 : ')
+
+data_frame = pd.read_csv(input_file)
+
+condition = r'^\d{2,3}-\d{3,4}-\d{4}$'
+data_frame_match_pattern = data_frame.loc[data_frame['전화번호'].str.match(condition)]
+
+data_frame_match_pattern.to_csv(output_file, index = False)
