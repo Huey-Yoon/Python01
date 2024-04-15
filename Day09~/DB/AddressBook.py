@@ -214,52 +214,51 @@ class AddressBook:
                     
 
     # 주소록 수정
+    # 주소록 수정
     def update(self):
-        # 1. 수정할 이름 입력
         print('----- 기존 연락처 수정 -----')
-        no = input('수정할 기존 번호 검색 : ')
+        # 1. 수정할 이름 입력
+        no = input('수정할 번호 : ')
+        no = int(no)
 
         # 2. 입력여부 체크
         if not no:
             print('번호가 입력되지 않아 수정을 취소합니다.')
             return
-        
-        # 3. 수정 여부 확인 (Y/N)
-        updated = False
-        
-        no = int(no)
 
-        name =''
-        person = self.update_data(no)
+        # 해당 번호로 조회
+        person = self.select_data(no)
 
         if person == None:
-            print('입력한 번호에 해당하는 연락처가 존재하지 않습니다.')
+            print('입력 번호에 해당하는 주소가 존재하지 않습니다.')
             return
+
+        # 입력한 번호가 연락처에 존재하면,
         print('검색한 전화번호 : {}'.format(person.tel))
-        if input('수정할까요? (Y/N)').upper() == 'N' :
-            return
-        
-        result = self.update_data(no)
+
+        # 해당 연락처 수정
+        option = input('이름, 전화번호, 주소 중 무엇을 수정하시겠습니까? (이름, 전화번호, 주소)')
+        if option == '이름':
+            person.name = input('수정할 이름을 입력하세요: ')
+        elif option == '전화번호':
+            person.tel = input('수정할 전화번호을 입력하세요: ')
+        elif option == '주소':
+            person.address = input('수정할 주소를 입력하세요: ')
+        else:
+            print('잘못 입력하셨습니다.')
+
+        # 수정 요청
+        result = 0 
+        # 유효성 검사
+        if person.name and person.tel and person.address:
+            result = self.update_data(person)
+        else:
+            print('누락된 입력값이 있어 등록되지 않았습니다.')
 
         if result > 0:
-        # 4. 수정할 이름/전화번호/주소 입력            
-            new_name = input('수정할 이름 : ')
-            new_tel = input('수정할 전화번호 : ')
-            new_address = input('수정할 주소 : ')
-
-            if new_name: self.address_list.name = new_name
-            if new_tel: self.address_list.phone = new_tel
-            if new_address: self.address_list.addr = new_address
-
-            print('{} 의 정보를 수정하였습니다.'.format(name))
-            return
+            print('연락처를 수정하였습니다.')
         else:
-            print('{}의 정보가 수정되지 않았습니다.'.format(name))
-
-        # 5. 수정할 list의 요소에 갱신 - address_list[i].name = new_name
-            updated = True
-            print('주소록이 수정되었습니다!')
-            print('수정된 주소록 정보')
+            print('연락처가 수정되지 않았습니다.')
 
 
 
@@ -391,7 +390,7 @@ class AddressBook:
     # 데이터 조회 끝
 
     # 데이터 수정
-    def update_data(self, no):
+    def update_data(self, person):
         try:
             result = 0
             # 커서 생성
@@ -402,9 +401,9 @@ class AddressBook:
                     + "     , tel = %s "\
                     + "     , address = %s "\
                     + " WHERE no = %s "
-
-                # result = cursor.execute(sql)          # 쿼리 실행 요청
-                cursor.execute(sql, new_name, new_tel, new_address, no)
+                
+                data = (person.name, person.tel, person.address, person.no)
+                result = cursor.execute(sql, data)
                 print('{}행의 데이터 삭제 완료'.format(result))
                 
             # 변경사항 적용
