@@ -1,9 +1,5 @@
 
-from openpyxl import load_workbook      # 엑셀 입력
-from openpyxl import Workbook           # 엑셀 출력     
-from datetime import date
-import glob
-import os
+import pandas as pd 
 
 import tkinter as tk
 from tkinter import filedialog
@@ -11,11 +7,12 @@ from tkinter import filedialog
 # 입력 파일 선택 버튼 클릭 시,
 def open_input_file():
     print('입력 파일 선택...')
-    # 파일 선택 상자에서 폴더경로 가져오기
-    directory_name = filedialog.askdirectory()
-    if directory_name:
+    # 파일 선택 상자에서 파일이름 가져오기
+    filename = filedialog.askopenfilename()
+    if filename:
         # 파일명 지정
-        input_file.set(directory_name)
+        input_file.set(filename)
+
 
 # 출력 파일 선택 버튼 클릭 시,
 def open_output_file():
@@ -35,42 +32,18 @@ def run():
 
 # 데이터 분석
 def work():
-    count = 0
-    input_directory = input_file.get()
-    # 엑셀 출력 객체 생성
+    # 엑셀 통합 문서의 jaunary_2013 입력하여 데이터프레임으로 반환
+    data_frame = pd.read_excel(input_file.get(), sheet_name='january_2013')
 
-    output_workbook = Workbook()
-    output_worksheet =  output_workbook.active  # 워크시트 활성화
-    output_worksheet.title = '모든 엑셀 파일 정보' # 워크시트 이름 지정
-
-    first_worksheet = True
-    # input 폴더 경로를 가져와서, 모든 엑셀파일 반복
-    for excel_file in glob.glob( os.path.join(input_directory, '*.xlsx') ):
-        workbook = load_workbook(filename=excel_file, read_only=True)
-        workbook_name = os.path.basename(excel_file)
-
-        # 엑셀 파일의 워크시트 반복
-        for worksheet in workbook:
-            if first_worksheet:
-                header_row = [cell.value for cell in worksheet[1]]
-                output_worksheet.append(header_row)
-                first_worksheet = False
-            # 데이터들을 가져오기
-            for row in worksheet.iter_rows(min_row = 2):
-                row_list = []
-                for cell in row:
-                    cell_value = cell.value
-                    if isinstance(cell_value, date):
-                        cell_value = cell_value.strftime('%Y/%m/%d')
-                    row_list.append(cell_value)
-                output_worksheet.append(row_list)
+    # ✅ TODO :분석
 
 
-    workbook.close()
-    output_workbook.save(output_file.get())
-
-
-
+    # 엑셀 출력 객체
+    writer = pd.ExcelWriter(output_file.get())
+    # 데이터프레임을 엑셀 파일로 저장 *index는 미사용
+    data_frame.to_excel(writer, sheet_name='out_jaunary_2013', index=False)
+    # 출력 객체 해제
+    writer.close()
 
 
 
